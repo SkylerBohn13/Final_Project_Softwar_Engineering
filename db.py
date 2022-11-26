@@ -1,12 +1,7 @@
 from sqlite3 import connect as sqlite_connect
 import ssl
 
-from cassandra.cluster import Cluster
-from cassandra.auth import PlainTextAuthProvider
-from cassandra.policies import WhiteListRoundRobinPolicy
 from pymysql import connect, MySQLError
-
-from slimleaf.exceptions import EMPTY_QUERY_MSG, SlimleafException
 
 
 EMPTY_QUERY_MSG = "Expected results but query was empty"
@@ -34,42 +29,6 @@ def get_sqlite3_conx(db_name):
     return conn
 
 
-# Cassandra
-def cassandra_connection(user, pw, cluster_host, key, cert_path=None):
-
-    use_ssl = True if cert_path else False
-
-    auth_provider = PlainTextAuthProvider(
-        username=user,
-        password=pw
-    )
-
-    contacts = [cluster_host]
-
-    ssl_options = {
-        'ca_certs': cert_path,
-        'ssl_version': ssl.PROTOCOL_TLSv1,
-        'cert_reqs': ssl.CERT_REQUIRED
-    }
-
-    if use_ssl:
-        cluster = Cluster(
-            contact_points=contacts,
-            auth_provider=auth_provider,
-            load_balancing_policy=WhiteListRoundRobinPolicy(contacts),
-            ssl_options=ssl_options
-        )
-    else:
-        cluster = Cluster(
-            contact_points=contacts,
-            auth_provider=auth_provider,
-            load_balancing_policy=WhiteListRoundRobinPolicy(contacts),
-        )
-
-    session = cluster.connect(key)
-    return session
-
-
 def query_result(cxn, qry, args=None, single_row=False, all_fields=True, empty_results=False):
     """Executes a READ-only query against the database (does not COMMIT changes).
     Args:
@@ -92,7 +51,7 @@ def query_result(cxn, qry, args=None, single_row=False, all_fields=True, empty_r
     else:
         result = curs.fetchall()
     if not result and not empty_results:
-        raise SlimleafException(EMPTY_QUERY_MSG)
+        raise Exception(EMPTY_QUERY_MSG)
     else:
         return result if all_fields else result[0]
 
@@ -114,4 +73,4 @@ def update_db(cxn, qry, args=None):
         cxn.commit()
         return curs.lastrowid
     except MySQLError as e:
-        raise SlimleafException(f'Update was unsuccessful') from e
+        raise Exception(f'Update was unsuccessful') from e

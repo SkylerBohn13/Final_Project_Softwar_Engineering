@@ -1,0 +1,53 @@
+<head>
+    <title>Admin Tool Login</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/adminScripts.js') }}"></script>
+</head>
+<form>
+    <h3>Log in</h3><br />
+    <label>username</label>
+    <input id="username" name="username" type="text" value="" /> <br />
+    <div id="emptyUsernameBanner" class="alert" style="display:none">
+        <h4>Please enter a username</h4>
+    </div>
+    <label>password</label>
+    <input id="password" name="password" type="password" value="" /> <br />
+    <div id="emptyPasswordBanner" class="alert" style="display:none">
+        <h4>Please enter a password</h4>
+    </div>
+    <div id="invalidLoginBanner" class="alert" style="display:none">
+        <h4>Credentials did not match any user in our system</h4>
+    </div>
+</form>
+
+<button id="loginBtn" onclick=attemptLogin()>Login</button>
+
+<script>
+    function attemptLogin() {
+        missingUsernameBanner = document.getElementById("emptyUsernameBanner");
+        missingPasswordBanner = document.getElementById("emptyPasswordBanner");
+        invalidLoginBanner = document.getElementById("invalidLoginBanner");
+
+        // Reset Email and Password banners
+        missingUsernameBanner.style.display = "none";
+        missingPasswordBanner.style.display = "none";
+        invalidLoginBanner.style.display = "none";
+
+        username = document.getElementById("username").value;
+        if (username.length < 1) {
+            missingUsernameBanner.style.display = "block";
+        }
+
+        password = document.getElementById("password").value;
+        if (password.length < 1) {
+            missingPasswordBanner.style.display = "block";
+        }
+
+        resp = postLogin(username, password);
+        if (resp.status === 200) {
+            window.location.replace("/admin");
+        } else {
+            invalidLoginBanner.style.display = "block";
+        }
+
+    }
+</script>
