@@ -29,7 +29,8 @@ def addCandidate(firstName,lastName,desiredPosition):
     cursor.execute("INSERT INTO candidateInfo (candidateID,firstName,lastname,desiredPosition) VALUES (?,?,?,?)",
                    (candidateID,firstName,lastName,desiredPosition))
     db1.commit()
-    
+
+# main created for testing purposes    
 def main():
     initializeTables()
     firstName = input("voterFN: ") 
