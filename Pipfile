@@ -7,9 +7,9 @@ name = "pypi"
 flask = "*"
 requests = "*"
 pymysql = "*"
+pytest = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.10"
-
