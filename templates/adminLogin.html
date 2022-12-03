@@ -44,7 +44,7 @@
 
         resp = postLogin(username, password);
         if (resp.status === 200) {
-            window.location.replace("/admin");
+            window.location.replace("/home");
         } else {
             invalidLoginBanner.style.display = "block";
         }
