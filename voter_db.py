@@ -16,11 +16,10 @@ def initializeTables():
     cursor.execute("CREATE TABLE IF NOT EXISTS candidateInfo(candidateID,firstName,lastName,desiredPosition)")
     cursor.execute("DELETE FROM candidateInfo")
 
-def addVoter(firstName,lastName,address):
+def addVoter(voter):
     # Creates unique voterID by concatenating first,last,address
-    voterID = firstName+lastName+address
     cursor.execute("INSERT INTO voterInfo (voterID,firstName,lastname,address) VALUES (?,?,?,?)",
-                   (voterID,firstName,lastName,address))
+                   (voter.id, voter.first_name, voter.last_name, voter.address))
     db1.commit()
     
 def addCandidate(firstName,lastName,desiredPosition):
@@ -40,4 +39,5 @@ def main():
     result = cursor.execute("SELECT * FROM voterInfo")
     print (result.fetchall())
 
-main()
+if __name__ == '__main__':
+    main()
