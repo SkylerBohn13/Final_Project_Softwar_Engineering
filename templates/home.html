@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+      integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+      crossorigin="anonymous"
+    /> 
+    <title>Homepage</title>
+</head>
+<body>
+    <!-- Creates the header which contains the button for admin login -->
+    <header id="main-header" class="bg-primary text-white p-4 mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <h1 style="text-align:center;">Please enter your information below to vote</h1>
+            </div>
+            <div class="col-md-2 align-self-center">
+                <input type="button" onclick="window.location.href='adminLogin.html';" class = "btn btn-warning btn-lg" value="Admin Login"/>
+            </div>
+    </div>
+    </header>
+
+    <form style="margin-left: 50px; width: 500px;">
+        <label for="fname">First and last name:</label><br>
+        <input type="text" class="form-control mr-2" id="name" name="name" value="ex: John Doe"><br>
+        <label for="address">Address:</label><br>
+        <input type="text" class="form-control mr-2" id="address" name="address" value="ex: 123 Fake Dr."><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+
+
+</body>
+</html>
