@@ -1,13 +1,19 @@
 import json
 
-from flask import request, Flask, redirect, url_for, render_template
+from flask import request, Flask, render_template
 import requests
 
-import db
+from db import get_sqlite3_conx
+from voter_db import initializeTables, addVoter, getVoters
+from voter import Voter
 
 
-#db.prepare_db()
+VOTER_TABLE = 'voters.db'
 
+
+conx = get_sqlite3_conx(VOTER_TABLE)
+initializeTables(conx)
+conx.close()
 
 
 app = Flask(__name__)
@@ -63,23 +69,19 @@ def login():
 def admin():
     return render_template('admin.html')
 
-@app.route('/v1/voters', methods=['GET'], endpoint='voters')
+@app.route('/v1/admin/voters', methods=['GET', 'POST'], endpoint='voters')
 def voters():
-    body = {
-        'voters': [
-            {
-                'id': '1234',
-                'first_name': 'john',
-                'last_name': 'doe',
-                'address': '123 sycamore ln'
-            },
-            {
-                'id': '5678',
-                'first_name': 'don',
-                'last_name': 'rickles',
-                'address': '145 masters ln'    
-            },
-        ]
-    }
-    return (body, 200)
+    conx = get_sqlite3_conx(VOTER_TABLE)
+    if request.method == 'GET':
+        body = json.dumps(getVoters(conx))
 
+        return (body, 200)
+
+    elif request.method == 'POST':
+        if not request.json:
+            return ({'error': 'No body found'}, 400)
+        
+        voter_record = request.json
+        new_voter = Voter(as_json=voter_record)
+        addVoter(conx, new_voter)
+        return (voter_record, 201)

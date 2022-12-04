@@ -2,10 +2,15 @@ import hashlib
 
 
 class Voter:
-    def __init__(self, first_name, last_name, address):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.address = address
+    def __init__(self, first_name='N/A', last_name='N/A', address='N/A', as_json=None):
+        if as_json:
+            self.first_name = as_json.get('first_name')
+            self.last_name = as_json.get('last_name')
+            self.address = as_json.get('address')
+        else:
+            self.first_name = first_name
+            self.last_name = last_name
+            self.address = address
         self.id = self.GenerateID()
 
     def GenerateID(self):

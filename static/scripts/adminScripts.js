@@ -16,7 +16,7 @@ function postLogin(username, password) {
 }
 
 function retrieveVoters() {
-  var path = "/v1/voters";
+  var path = "/v1/admin/voters";
   var url = serverUrl + path;
 
   var xhr = new XMLHttpRequest();
