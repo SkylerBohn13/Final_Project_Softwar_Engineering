@@ -53,7 +53,10 @@ def query_result(cxn, qry, args=None, single_row=False, all_fields=True, empty_r
     if not result and not empty_results:
         raise Exception(EMPTY_QUERY_MSG)
     else:
-        return result if all_fields else result[0]
+        if len(result) > 0:
+            return result if all_fields else result[0]
+        else:
+            return []
 
 
 def update_db(cxn, qry, args=None):
