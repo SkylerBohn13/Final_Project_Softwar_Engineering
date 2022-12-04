@@ -14,3 +14,14 @@ function postLogin(username, password) {
   console.log(xhr.getAllResponseHeaders());
   return {status: xhr.status, body: xhr.responseText};
 }
+
+function retrieveVoters() {
+  var path = "/v1/voters";
+  var url = serverUrl + path;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, false);
+  xhr.send(null);
+  return {status: xhr.status, body: xhr.responseText};
+
+}

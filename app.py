@@ -18,8 +18,12 @@ app.secret_key = b'mysecretkey'
 
 @app.route('/', endpoint='index')
 def index():
-    headers = {}
-    return redirect(url_for('login')), 302, headers
+    return render_template('home.html')
+
+@app.route('/admin/login', endpoint='admin_login')
+def admin_login():
+    return render_template('adminLogin.html')
+
 
 
 @app.route('/v1/login', methods=['POST'], endpoint='api_login')
@@ -58,3 +62,24 @@ def login():
 @app.route('/admin', methods=['GET'], endpoint='admin')
 def admin():
     return render_template('admin.html')
+
+@app.route('/v1/voters', methods=['GET'], endpoint='voters')
+def voters():
+    body = {
+        'voters': [
+            {
+                'id': '1234',
+                'first_name': 'john',
+                'last_name': 'doe',
+                'address': '123 sycamore ln'
+            },
+            {
+                'id': '5678',
+                'first_name': 'don',
+                'last_name': 'rickles',
+                'address': '145 masters ln'    
+            },
+        ]
+    }
+    return (body, 200)
+

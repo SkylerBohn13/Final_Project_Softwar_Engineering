@@ -2,6 +2,9 @@
 <html lang="en">
 
   <head>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/adminScripts.js') }}"></script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -21,7 +24,8 @@
   </head>
 <!-- This webpage will use the bootstrap library -->
 
-  <body>
+
+  <body onload="displayVoters();"">
 
     <!-- Creates the Green bar that holds the search bar -->
     <header id="main-header" class="bg-primary text-white p-4 mb-3">
@@ -35,10 +39,58 @@
     </div>
   </header>
 
+  <table id="voterListings" style="display:none">
+  </table>
 
-  <div class="row"> 
+  <script>
+    function displayVoters() {
+        // Clear table
+        votersTable = document.getElementById("voterListings");
+        votersTable.innerHTML = "";
+
+        var resp = retrieveVoters();
+        var results = JSON.parse(resp.body)["voters"];
+
+        if (results.length > 0) {
+
+            // Populate column titles
+            var titleRow = votersTable.insertRow(-1);
+            lastNameTitleCell = titleRow.insertCell(-1)
+            firstNameTitleCell = titleRow.insertCell(-1)
+            addressTitleCell = titleRow.insertCell(-1)
+            idTitleCell = titleRow.insertCell(-1)
+
+            lastNameTitleCell.innerHTML = "Last";
+            firstNameTitleCell.innerHTML = "First";
+            addressTitleCell.innerHTML = "Address";
+            idTitleCell.innerHTML = "Voter ID"
+
+             // Populate search results
+
+             for (result of results) {
+                var row = votersTable.insertRow(-1);
+                var rmap = new Map(Object.entries(result));
+                lastNameCell = row.insertCell(-1)
+                firstNameCell = row.insertCell(-1)
+                addressCell = row.insertCell(-1)
+                idCell = row.insertCell(-1)
+
+                lastNameCell.innerHTML = rmap.get("first_name");
+                firstNameCell.innerHTML = rmap.get("last_name");
+                addressCell.innerHTML = rmap.get("address");
+                idCell.innerHTML = rmap.get("id")
+            }
+
+            votersTable.style.display = "table";
+
+        }
+    }
+</script>
+
+  <!-- <div class="row">  -->
    
-   <div id="main" class="card card-body col-sm-6">
+   <!-- <div id="main" class="card card-body col-sm-6">
+
     <h2 class="title">All Voters</h2>
       <div class="container">
             <div class="row">
@@ -52,10 +104,13 @@
                 Voter ID
               </div>
             </div>
-          </div>
+
+          </div> -->
+
+    
  
     <!-- This list will contain all voter info -->
-    <ul id="items" class="list-group">
+    <!-- <ul id="items" class="list-group">
 
       <li class="list-group-item">
         <div class="row">
@@ -97,7 +152,8 @@
          </li>
 
     </ul> 
-  </div>
+
+  </div> -->
 
   <!-- This list contains all votes cast -->
     <div id="main" class="card card-body col-sm-6">
