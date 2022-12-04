@@ -1,15 +1,18 @@
 import hashlib
 
+from person import Person
 
-class Voter:
+
+class Voter(Person):
     def __init__(self, first_name='N/A', last_name='N/A', address='N/A', as_json=None):
         if as_json:
-            self.first_name = as_json.get('first_name')
-            self.last_name = as_json.get('last_name')
+            fname = as_json.get('first_name')
+            lname = as_json.get('last_name')
+            super().__init__(fname, lname)  # call parent init method to write name fields for true inheritance
+
             self.address = as_json.get('address')
         else:
-            self.first_name = first_name
-            self.last_name = last_name
+            super().__init__(first_name, last_name)  # call parent init
             self.address = address
         self.id = self.GenerateID()
 

@@ -8,40 +8,73 @@ from db import query_result
 DB_NAME = 'voters.db'
 
 
-def initializeTables(conx):
+def initializeVoters(conx):
     cursor = conx.cursor()
     # Creates table voterInfo and deletes all rows to ensure a clean dataset
-    cursor.execute("CREATE TABLE IF NOT EXISTS voterInfo(voterID,firstName,lastName,address)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS voterInfo(id,firstName,lastName,address)")
     cursor.execute("DELETE FROM voterInfo")
     conx.commit()
+
+def initializeCandidates(conx):
+    cursor = conx.cursor()
     # Creates table candidateInfo and deletes all rows to ensure a clean dataset
-    cursor.execute("CREATE TABLE IF NOT EXISTS candidateInfo(candidateID,firstName,lastName,desiredPosition)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS candidateInfo(id,firstName,lastName,position)")
     cursor.execute("DELETE FROM candidateInfo")
     conx.commit()
 
 def addVoter(conx, voter):
     cursor = conx.cursor()
     # Creates unique voterID by concatenating first,last,address
-    cursor.execute("INSERT INTO voterInfo (voterID,firstName,lastname,address) VALUES (?,?,?,?)",
+    cursor.execute("INSERT INTO voterInfo (id,firstName,lastName,address) VALUES (?,?,?,?)",
                    (voter.id, voter.first_name, voter.last_name, voter.address))
     conx.commit()
+    print("Created candidates DB")
 
 
 def getVoters(conx):
     query = 'SELECT * FROM voterInfo'
-    result = query_result(conx, query, empty_results=True, all_fields=False)
-    result_dict = {
-        'id': result[0],
-        'first_name': result[1],
-        'last_name': result[2],
-        'address': result[3],
+    formatted_results = []
+    results = query_result(conx, query, empty_results=True, all_fields=True)
+    if len(results) > 0:
+        for r in results:
+            formatted_results.append(
+                {
+                    'id': r[0],
+                    'first_name': r[1],
+                    'last_name': r[2],
+                    'address': r[3],
+                }
+            )
+
+    response_body = {
+        'voters': formatted_results
     }
-    return result_dict
+
+    return response_body
     
-def addCandidate(conx, firstName,lastName,desiredPosition):
+def addCandidate(conx, candidate):
     cursor = conx.cursor()
-    # Creates unique candidateID by concatenating first,last,position
-    candidateID = firstName+lastName+desiredPosition
-    cursor.execute("INSERT INTO candidateInfo (candidateID,firstName,lastname,desiredPosition) VALUES (?,?,?,?)",
-                   (candidateID,firstName,lastName,desiredPosition))
+    cursor.execute("INSERT INTO candidateInfo (id, firstName, lastName, position) VALUES (?,?,?,?)",
+                   (candidate.id, candidate.first_name, candidate.last_name, candidate.position))
     conx.commit()
+
+def getCandidates(conx):
+    query = 'SELECT * FROM candidateInfo'
+    formatted_results = []
+    results = query_result(conx, query, empty_results=True, all_fields=True)
+    if len(results) > 0:
+        for r in results:
+            formatted_results.append(
+                {
+                    'id': r[0],
+                    'first_name': r[1],
+                    'last_name': r[2],
+                    'position': r[3],
+                }
+            )
+
+    response_body = {
+        'candidates': formatted_results
+    }
+    
+    return response_body
