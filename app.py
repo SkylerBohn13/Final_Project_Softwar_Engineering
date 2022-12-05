@@ -4,9 +4,10 @@ from flask import request, Flask, render_template
 import requests
 
 from db import get_sqlite3_conx
-from voter_db import initializeVoters, initializeCandidates, addVoter, getVoters, addCandidate, getCandidates
+from voter_db import initializeVoters, initializeCandidates, initializeVotes, addVoter, getVoters, addCandidate, getCandidates, addVote, getVotes
 from voter import Voter
 from candidate import Candidate
+from vote import Vote
 
 
 VOTER_DB = 'voters.db'
@@ -16,6 +17,7 @@ CANDIDATES_DB = 'candidates.db'
 conx = get_sqlite3_conx(VOTER_DB)
 initializeVoters(conx)
 initializeCandidates(conx)
+initializeVotes(conx)
 conx.close()
 
 
@@ -81,7 +83,6 @@ def voters():
         return (body, 200)
 
     elif request.method == 'POST':
-        print(request.json)
         if not request.json:
             return ({'error': 'No body found'}, 400)
         
@@ -106,3 +107,21 @@ def candidates():
         new_candidate = Candidate(as_json=voter_record)
         addCandidate(conx, new_candidate)
         return (voter_record, 201)
+
+@app.route('/v1/admin/votes', methods=['GET', 'POST'], endpoint='votes')
+def candidates():
+    conx = get_sqlite3_conx(VOTER_DB)
+    if request.method == 'GET':
+        body = json.dumps(getVotes(conx))
+
+        return (body, 200)
+
+    elif request.method == 'POST':
+        if not request.json:
+            return ({'error': 'No body found'}, 400)
+        
+        vote_record = request.json
+        new_vote = Vote(as_json=vote_record)
+        addVote(conx, new_vote)
+        return (vote_record, 201)
+

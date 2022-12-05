@@ -22,6 +22,13 @@ def initializeCandidates(conx):
     cursor.execute("DELETE FROM candidateInfo")
     conx.commit()
 
+def initializeVotes(conx):
+    cursor = conx.cursor()
+    # Creates table candidateInfo and deletes all rows to ensure a clean dataset
+    cursor.execute("CREATE TABLE IF NOT EXISTS votes(voter_id, president, vice_president, senator, representative)")
+    cursor.execute("DELETE FROM votes")
+    conx.commit()
+
 def addVoter(conx, voter):
     cursor = conx.cursor()
     # Creates unique voterID by concatenating first,last,address
@@ -75,6 +82,34 @@ def getCandidates(conx):
 
     response_body = {
         'candidates': formatted_results
+    }
+    
+    return response_body
+
+def addVote(conx, vote):
+    cursor = conx.cursor()
+    cursor.execute("INSERT INTO votes (voter_id, president, vice_president, senator, representative) VALUES (?,?,?,?,?)",
+                   (vote.voter_id, vote.president, vote.vice_president, vote.senator, vote.representative))
+    conx.commit()
+
+def getVotes(conx):
+    query = 'SELECT * FROM votes'
+    formatted_results = []
+    results = query_result(conx, query, empty_results=True, all_fields=True)
+    if len(results) > 0:
+        for r in results:
+            formatted_results.append(
+                {
+                    'voter_id': r[0],
+                    'president': r[1],
+                    'vice_president': r[2],
+                    'senator': r[3],
+                    'representative': r[4],
+                }
+            )
+
+    response_body = {
+        'votes': formatted_results
     }
     
     return response_body
