@@ -89,6 +89,7 @@ def voters():
         voter_record = request.json
         new_voter = Voter(as_json=voter_record)
         addVoter(conx, new_voter)
+        print(f"voter record: {voter_record}")
         return (voter_record, 201)
 
 @app.route('/v1/admin/candidates', methods=['GET', 'POST'], endpoint='candidates')
@@ -109,7 +110,7 @@ def candidates():
         return (voter_record, 201)
 
 @app.route('/v1/admin/votes', methods=['GET', 'POST'], endpoint='votes')
-def candidates():
+def votes():
     conx = get_sqlite3_conx(VOTER_DB)
     if request.method == 'GET':
         body = json.dumps(getVotes(conx))
@@ -125,3 +126,53 @@ def candidates():
         addVote(conx, new_vote)
         return (vote_record, 201)
 
+@app.route('/v1/admin/vote_totals', methods=['GET'], endpoint='vote_totals')
+def vote_totals():
+    conx = get_sqlite3_conx(VOTER_DB)
+    votes = getVotes(conx)
+    totals = votes.get('votes', None)
+    if not totals:
+        raise Exception('Could not retrieve totals from body')
+
+    president_votes = {}
+    vice_president_votes = {}
+    senator_votes = {}
+    representative_votes = {}
+    for vote in totals:
+        president = vote.get('president', None)
+        vice_president = vote.get('vice_president', None)
+        senator = vote.get('senator', None)
+        representative = vote.get('representative', None)
+        if not president or not vice_president or not senator or not representative:
+            print('Vote record must include president, vice_president, senator, and representative')
+            continue # record is corrupt, skip it
+
+        if not president_votes.get(president, None):
+            president_votes[president] = 0
+        president_votes[president] += 1
+
+        if not vice_president_votes.get(vice_president, None):
+            vice_president_votes[vice_president] = 0
+        vice_president_votes[president] += 1
+
+        if not senator_votes.get(senator, None):
+            senator_votes[senator] = 0
+        senator_votes[senator] += 1
+
+        if not representative_votes.get(representative, None):
+            representative_votes[representative] = 0
+        representative_votes += 1
+
+    body = {
+        'vote_totals': {
+            'president': president_votes,
+            'vice_president': vice_president_votes,
+            'senator': senator_votes,
+            'representative': representative_votes,
+        },
+        'winners': {
+
+        }
+    }
+
+    return (votes, 200)
