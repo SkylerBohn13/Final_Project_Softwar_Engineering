@@ -33,10 +33,10 @@ function postVoter(fname, lname, address) {
   return xhr.responseText;
 }
 
-function postVote(id, president, vice_president, senator, representative) {
+function postVote(id, payload) {
   var path = "/v1/admin/votes";
   var url = serverUrl + path;
-  var body = JSON.stringify({voter_id: id, president: president, vice_president: vice_president, senator: senator, representative: representative})
+  var body = JSON.stringify(payload)
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, false);
   xhr.setRequestHeader('Content-Type', 'application/json')

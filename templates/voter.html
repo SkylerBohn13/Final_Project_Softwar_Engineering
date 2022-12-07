@@ -68,7 +68,7 @@
             <div id="vp" class="card card-body col-sm-6 float-child">
               <h2 class="title">Vice President</h2>
                 <div class="container">
-                  <select name="vice_president_dropdown"  id="president_dropdown">
+                  <select name="vice_president_dropdown"  id="vice_president_dropdown">
                     {% for row in candidates['vice_president'] %}
                     <option value='{{row}}'>{{row}}</option>
                     {% endfor %}
@@ -78,7 +78,7 @@
             <div id="s" class="card card-body col-sm-6 float-child">
               <h2 class="title">Senator</h2>
               <div class="container">
-                  <select name="senator_dropdown"  id="president_dropdown">
+                  <select name="senator_dropdown"  id="senator_dropdown">
                     {% for row in candidates['senator'] %}
                     <option value='{{row}}'>{{row}}</option>
                     {% endfor %}
@@ -88,64 +88,40 @@
             <div id="r" class="card card-body col-sm-6 float-child">
               <h2 class="title">Representative</h2>
               <div class="container">
-                  <select name="representative_dropdown"  id="president_dropdown">
+                  <select name="representative_dropdown"  id="representative_dropdown">
                     {% for row in candidates['representative'] %}
                     <option value='{{row}}'>{{row}}</option>
                     {% endfor %}
                     </select> 
               </div>
             </div>
-
-          <script>
-            function displayCandidates() {
-                // Clear table
-                candidateTable = document.getElementById("candidateListings");
-                candidateTable.innerHTML = "";
-
-                var resp = retrieveCandidates();
-                var results = JSON.parse(resp.body)["candidates"]; 
-
-        
-                if (results.length > 0) {
-        
-                    // Populate column titles
-                    var titleRow = candidateTable.insertRow(-1);
-                    lastNameTitleCell = titleRow.insertCell(-1);
-                    firstNameTitleCell = titleRow.insertCell(-1);
-                    PositionTitleCell = titleRow.insertCell(-1);
-                    idTitleCell = titleRow.insertCell(-1);
-
-                    firstNameTitleCell.innerHTML = "First";
-                    lastNameTitleCell.innerHTML = "Last";
-                    PositionTitleCell.innerHTML = "Position";
-                    idTitleCell.innerHTML = "ID"
-        
-                     // Populate list
-        
-                     for (result of results) {
-                        var row = candidateTable.insertRow(-1);
-                        var rmap = new Map(Object.entries(result));
-                        firstNameCell = row.insertCell(-1);
-                        lastNameCell = row.insertCell(-1);
-                        PositionCell = row.insertCell(-1);
-                        idCell = row.insertCell(-1);
-                        buttonCell = row.insertCell(-1);
-        
-                        firstNameCell.innerHTML = rmap.get("first_name");
-                        lastNameCell.innerHTML = rmap.get("last_name");
-                        PositionCell.innerHTML = rmap.get("position");
-                        idCell.innerHTML = rmap.get("id");
-                        buttonCell.innerHTML = '<input type="button" onclick="window.location.href="/voter"; postVote();" class = "btn btn-warning btn-lg" value="Vote!"/>';
-                    }
-        
-                    candidateTable.style.display = "table";
-        
-                }
-            }
-            function postVote(){
-             
-            }
-
-          </script>
+    
+          <input type="button" onclick="submitVote();" class = "btn btn-warning btn-lg" value="Vote!"/>
+        <script>
+          function getCookie(name) {
+              const value = `; ${document.cookie}`;
+              const parts = value.split(`; ${name}=`);
+              if (parts.length === 2) return parts.pop().split(';').shift();
+              }
+      
+          function submitVote(){
+              var voter_id = getCookie('voter_id')
+              var payload = {};
+              payload['voter_id'] = voter_id;
+              payload['president'] = 'blah';
+              payload['vice_president'] = 'bluie';
+              payload['senator'] = 'ijfsdl';
+              payload['representative'] = 'kljfdsljjfs';
+              
+              var resp = postVote(payload);
+              console.log("AHAJHAJHA");
+              console.log(resp)
+      
+              // setCookie('voter_id', resp.id);
+      
+              // window.location.href='/voter';
+              }
+      
+        </script>
     </body>
 </html>
