@@ -4,8 +4,9 @@ from flask import request, Flask, render_template
 import requests
 
 from db import get_sqlite3_conx
-from voter_db import initializeVoters, initializeCandidates, addVoter, getVoters, addCandidate, getCandidates
+from voter_db import initializeVoters, initializeCandidates, addVoter, getVoters, addCandidate, getCandidates, addVote, getVotes
 from voter import Voter
+from vote import Vote
 from candidate import Candidate
 
 

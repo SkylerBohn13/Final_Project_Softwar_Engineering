@@ -33,7 +33,7 @@ function postVoter(fname, lname, address) {
   return xhr.responseText;
 }
 
-function postVote(id, payload) {
+function postVote(payload) {
   var path = "/v1/admin/votes";
   var url = serverUrl + path;
   var body = JSON.stringify(payload)
