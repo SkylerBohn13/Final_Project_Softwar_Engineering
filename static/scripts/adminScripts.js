@@ -24,8 +24,13 @@ function postVoter(fname, lname, address) {
   xhr.open("POST", url, false);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(body);
-  console.log(xhr.getAllResponseHeaders());
-  return {status: xhr.status, body: xhr.responseText};
+
+  var resp = xhr.response;
+  var respStatus = xhr.status;
+  var respBody = resp.details;
+  console.log("jkfsdkjhfkdhs");
+  console.log(xhr.responseText);
+  return xhr.responseText;
 }
 
 function postVote(id, president, vice_president, senator, representative) {

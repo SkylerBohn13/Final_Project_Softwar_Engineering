@@ -93,7 +93,7 @@ def voters():
         addVoter(conx, new_voter)
         print(f"voter record: {voter_record}")
         voter_record["id"] = new_voter.id
-        return (voter_record, 201)
+        return (json.dumps(voter_record), 201)
 
 
 @app.route('/v1/admin/candidates', methods=['GET', 'POST'], endpoint='candidates')
