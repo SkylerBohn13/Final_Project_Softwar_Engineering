@@ -11,21 +11,21 @@ DB_NAME = 'voters.db'
 def initializeVoters(conx):
     cursor = conx.cursor()
     # Creates table voterInfo and deletes all rows to ensure a clean dataset
-    cursor.execute("CREATE TABLE IF NOT EXISTS voterInfo(id,firstName,lastName,address)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS voterInfo(id primary key,firstName,lastName,address)")
     cursor.execute("DELETE FROM voterInfo")
     conx.commit()
 
 def initializeCandidates(conx):
     cursor = conx.cursor()
     # Creates table candidateInfo and deletes all rows to ensure a clean dataset
-    cursor.execute("CREATE TABLE IF NOT EXISTS candidateInfo(id,firstName,lastName,position)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS candidateInfo(id primary key,firstName,lastName,position)")
     cursor.execute("DELETE FROM candidateInfo")
     conx.commit()
 
 def initializeVotes(conx):
     cursor = conx.cursor()
     # Creates table candidateInfo and deletes all rows to ensure a clean dataset
-    cursor.execute("CREATE TABLE IF NOT EXISTS votes(voter_id, president, vice_president, senator, representative)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS votes(voter_id primary key, president, vice_president, senator, representative)")
     cursor.execute("DELETE FROM votes")
     conx.commit()
 
