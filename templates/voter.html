@@ -55,35 +55,46 @@
           </header>
           
           <div class="float-container">
-            <div id="main" class="card card-body col-sm-6 float-child">
+            <div id="p" class="card card-body col-sm-6 float-child">
               <h2 class="title">President</h2>
                 <div class="container">
                   <select name="president_dropdown"  id="president_dropdown">
                     {% for row in candidates['president'] %}
                     <option value='{{row}}'>{{row}}</option>
                     {% endfor %}
-                    </select> 
-
-                    <select name="vice_president_dropdown"  id="president_dropdown">
-                      {% for row in candidates['vice_president'] %}
-                      <option value='{{row}}'>{{row}}</option>
-                      {% endfor %}
-                      </select> 
-
-                    <select name="senator_dropdown"  id="president_dropdown">
-                      {% for row in candidates['senator'] %}
-                      <option value='{{row}}'>{{row}}</option>
-                      {% endfor %}
-                      </select> 
-
-                      <select name="representative_dropdown"  id="president_dropdown">
-                        {% for row in candidates['representative'] %}
-                        <option value='{{row}}'>{{row}}</option>
-                        {% endfor %}
-                        </select> 
+                    </select>
                 </div>
-          </div>
-          </div>
+            </div>
+            <div id="vp" class="card card-body col-sm-6 float-child">
+              <h2 class="title">Vice President</h2>
+                <div class="container">
+                  <select name="vice_president_dropdown"  id="president_dropdown">
+                    {% for row in candidates['vice_president'] %}
+                    <option value='{{row}}'>{{row}}</option>
+                    {% endfor %}
+                    </select> 
+                </div>
+            </div>
+            <div id="s" class="card card-body col-sm-6 float-child">
+              <h2 class="title">Senator</h2>
+              <div class="container">
+                  <select name="senator_dropdown"  id="president_dropdown">
+                    {% for row in candidates['senator'] %}
+                    <option value='{{row}}'>{{row}}</option>
+                    {% endfor %}
+                    </select> 
+              </div>
+            </div>
+            <div id="r" class="card card-body col-sm-6 float-child">
+              <h2 class="title">Representative</h2>
+              <div class="container">
+                  <select name="representative_dropdown"  id="president_dropdown">
+                    {% for row in candidates['representative'] %}
+                    <option value='{{row}}'>{{row}}</option>
+                    {% endfor %}
+                    </select> 
+              </div>
+            </div>
 
           <script>
             function displayCandidates() {
