@@ -9,10 +9,41 @@
       integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
       crossorigin="anonymous"
     />
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/adminScripts.js') }}"></script>
         <Title>Voter Tool</Title>
+        <style>
+          .float-container {
+              border: 3px solid #fff;
+              padding: 20px;
+            }
+    
+            .float-child {
+                width: 50%;
+                float: left;
+                padding: 20px;
+                border: 2px solid black;
+            }
+    
+            table{
+              border-collapse: separate;
+              border-spacing: 0 15px;
+            }
+    
+            th,
+            td {
+              width: 150px;
+              text-align: center;
+              border: 1px solid black;
+              padding: 2px;
+            }
+    
+            h2 {
+              color: #4287f5;
+            }
+        </style>
     </head>
 
-    <body>
+    <body onload="fillCandidates();displayCandidates();">
         <header id="main-header" class="bg-success text-white p-4 mb-3">
             <div class="container">
               <div class="row">
@@ -23,65 +54,65 @@
             </div>
           </header>
           
-          <div class="container">
-           <div id="main" class="card card-body">
-            <h2 class="title">Welcome, please vote!</h2>
-            <h2 class="title">Candidates:</h2>
-            <ul id="items" class="list-group">
-              <li class="list-group-item">
-                <div class="row">
-                <div class="col-sm" >
-                  Senate
-                </div>
-                <div class="col-sm">
-                Person 
-                </div>
-                <div class="col-sm">
-                    <button class="btn btn-success btn-sm float-right Vote">Vote!</button>
-                   </div>
-            </li>
-
-              <li class="list-group-item">
-                <div class="row">
-                <div class="col-sm" >
-                  Senate
-                </div>
-                <div class="col-sm">
-                Person 
-                </div>
-                <div class="col-sm">
-                    <button class="btn btn-success btn-sm float-right Vote">Vote!</button>
-                   </div>
-                </li>
-              <li class="list-group-item">
-                <div class="row">
-                <div class="col-sm" >
-                  Senate
-                </div>
-                <div class="col-sm">
-                Person 
-                </div>
-                <div class="col-sm">
-                 <button class="btn btn-success btn-sm float-right Vote">Vote!</button>
-                </div>
-                </li>
-
-              <li class="list-group-item">
-                <div class="row">
-                <div class="col-sm" >
-                  Senate
-                </div>
-                <div class="col-sm">
-                Person 
-                </div>
-                <div class="col-sm">
-                <button class="btn btn-success btn-sm float-right Vote">Vote!</button>
-                </div>
-                </li>
-            </ul>
-           </div>
+          <div class="float-container">
+            <div id="main" class="card card-body col-sm-6 float-child">
+              <h2 class="title">All Candidates</h2>
+                <div class="container">
+            <table id="candidateListings" style="display:none">
+            </table>
           </div>
+          </div>
+          </div>
+
           <script>
+            function displayCandidates() {
+                // Clear table
+                candidateTable = document.getElementById("candidateListings");
+                candidateTable.innerHTML = "";
+
+                var resp = retrieveCandidates();
+                var results = JSON.parse(resp.body)["candidates"]; 
+
+        
+                if (results.length > 0) {
+        
+                    // Populate column titles
+                    var titleRow = candidateTable.insertRow(-1);
+                    lastNameTitleCell = titleRow.insertCell(-1);
+                    firstNameTitleCell = titleRow.insertCell(-1);
+                    PositionTitleCell = titleRow.insertCell(-1);
+                    idTitleCell = titleRow.insertCell(-1);
+
+                    firstNameTitleCell.innerHTML = "First";
+                    lastNameTitleCell.innerHTML = "Last";
+                    PositionTitleCell.innerHTML = "Position";
+                    idTitleCell.innerHTML = "ID"
+        
+                     // Populate list
+        
+                     for (result of results) {
+                        var row = candidateTable.insertRow(-1);
+                        var rmap = new Map(Object.entries(result));
+                        firstNameCell = row.insertCell(-1);
+                        lastNameCell = row.insertCell(-1);
+                        PositionCell = row.insertCell(-1);
+                        idCell = row.insertCell(-1);
+                        buttonCell = row.insertCell(-1);
+        
+                        firstNameCell.innerHTML = rmap.get("first_name");
+                        lastNameCell.innerHTML = rmap.get("last_name");
+                        PositionCell.innerHTML = rmap.get("position");
+                        idCell.innerHTML = rmap.get("id");
+                        buttonCell.innerHTML = '<input type="button" onclick="window.location.href="/voter"; postVote();" class = "btn btn-warning btn-lg" value="Vote!"/>';
+                    }
+        
+                    candidateTable.style.display = "table";
+        
+                }
+            }
+            function postVote(){
+             
+            }
 
           </script>
     </body>

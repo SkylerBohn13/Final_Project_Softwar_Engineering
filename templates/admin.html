@@ -16,16 +16,40 @@
       crossorigin="anonymous"
     /> 
     <title>Admin Tool</title>
-
     <style>
-      
-    </style>
+      .float-container {
+          border: 3px solid #fff;
+          padding: 20px;
+        }
 
+        .float-child {
+            width: 50%;
+            float: left;
+            padding: 20px;
+            border: 2px solid black;
+        }
+
+        table{
+          border-collapse: separate;
+          border-spacing: 0 15px;
+        }
+
+        th,
+        td {
+          width: 150px;
+          text-align: center;
+          border: 1px solid black;
+          padding: 2px;
+        }
+
+        h2 {
+          color: #4287f5;
+        }
+    </style>
   </head>
 <!-- This webpage will use the bootstrap library -->
 
-
-  <body onload="displayVoters();"">
+  <body onload="displayVotes();displayVoters();">
 
     <!-- Creates the Green bar that holds the search bar -->
     <header id="main-header" class="bg-primary text-white p-4 mb-3">
@@ -39,29 +63,52 @@
     </div>
   </header>
 
+  <div class="float-container">
+  <div id="main" class="card card-body col-sm-6 float-child">
+    <h2 class="title">All Voters</h2>
+      <div class="container">
+            <div class="row">
   <table id="voterListings" style="display:none">
   </table>
+    </div>
+  </div>
+  </div>
+
+  <div id="main" class="card card-body col-sm-6 float-child">
+    <h2 class="title">All Votes</h2>
+      <div class="container">
+        <div class="row">
+
+        <table id="voteListings" style="display:none">
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
 
   <script>
     function displayVoters() {
+      console.log("HERE")
         // Clear table
         votersTable = document.getElementById("voterListings");
         votersTable.innerHTML = "";
 
         var resp = retrieveVoters();
         var results = JSON.parse(resp.body)["voters"];
-
+        console.log("HERE2:"+ resp.body)
         if (results.length > 0) {
 
             // Populate column titles
             var titleRow = votersTable.insertRow(-1);
-            lastNameTitleCell = titleRow.insertCell(-1)
             firstNameTitleCell = titleRow.insertCell(-1)
+            lastNameTitleCell = titleRow.insertCell(-1)
             addressTitleCell = titleRow.insertCell(-1)
             idTitleCell = titleRow.insertCell(-1)
 
-            lastNameTitleCell.innerHTML = "Last";
-            firstNameTitleCell.innerHTML = "First";
+
+            firstNameTitleCell.innerHTML = "First name";
+            lastNameTitleCell.innerHTML = "Last name";
             addressTitleCell.innerHTML = "Address";
             idTitleCell.innerHTML = "Voter ID"
 
@@ -70,13 +117,13 @@
              for (result of results) {
                 var row = votersTable.insertRow(-1);
                 var rmap = new Map(Object.entries(result));
-                lastNameCell = row.insertCell(-1)
                 firstNameCell = row.insertCell(-1)
+                lastNameCell = row.insertCell(-1)
                 addressCell = row.insertCell(-1)
                 idCell = row.insertCell(-1)
 
-                lastNameCell.innerHTML = rmap.get("first_name");
-                firstNameCell.innerHTML = rmap.get("last_name");
+                firstNameCell.innerHTML = rmap.get("first_name");
+                lastNameCell.innerHTML = rmap.get("last_name");
                 addressCell.innerHTML = rmap.get("address");
                 idCell.innerHTML = rmap.get("id")
             }
@@ -85,139 +132,55 @@
 
         }
     }
+
+    function displayVotes() {
+        // Clear table
+        votesTable = document.getElementById("voteListings");
+        votesTable.innerHTML = "";
+
+        var resp = retrieveVotes();
+        var results = JSON.parse(resp.body)["votes"];
+
+        if (results.length > 0) {
+
+            // Populate column titles
+            var titleRow = votesTable.insertRow(-1);
+            idTitleCell = titleRow.insertCell(-1)
+            presidentTitleCell = titleRow.insertCell(-1)
+            vicepresTitleCell = titleRow.insertCell(-1)
+            senTitleCell = titleRow.insertCell(-1)
+            repTitleCell = titleRow.insertCell(-1)
+
+            idTitleCell.innerHTML = "Voter ID";
+            presidentTitleCell.innerHTML = "President";
+            vicepresTitleCell.innerHTML = "Vice President";
+            senTitleCell.innerHTML = "Senator"
+            repTitleCell.innerHTML = "Representative"
+
+             // Populate search results
+
+             for (result of results) {
+                var row = votesTable.insertRow(-1);
+                var rmap = new Map(Object.entries(result));
+                idCell = row.insertCell(-1)
+                presNameCell = row.insertCell(-1)
+                vicepresNameCell = row.insertCell(-1)
+                senNameCell = row.insertCell(-1)
+                repNameCell = row.insertCell(-1)
+
+                idCell.innerHTML = rmap.get("voter_id")
+                presNameCell.innerHTML = rmap.get("president");
+                vicepresNameCell.innerHTML = rmap.get("vice_president");
+                senNameCell.innerHTML = rmap.get("senator");
+                repNameCell.innerHTML = rmap.get("representative");
+                
+            }
+
+            votesTable.style.display = "table";
+
+        }
+    }
 </script>
-
-  <!-- <div class="row">  -->
-   
-   <!-- <div id="main" class="card card-body col-sm-6">
-
-    <h2 class="title">All Voters</h2>
-      <div class="container">
-            <div class="row">
-              <div class="col-sm">
-                Voter Name
-              </div>
-              <div class="col-sm">
-              Voter Address
-              </div>
-              <div class="col-sm">
-                Voter ID
-              </div>
-            </div>
-
-          </div> -->
-
-    
- 
-    <!-- This list will contain all voter info -->
-    <!-- <ul id="items" class="list-group">
-
-      <li class="list-group-item">
-        <div class="row">
-        <div class="col-sm" id = "name">
-          Billy Bob
-        </div>
-        <div class="col-sm">
-        123 North Rd.
-        </div>
-        <div class="col-sm">
-          Billybob123northRd
-        </div>
-      </div></li>
-
-      <li class="list-group-item">
-        <div class="row">
-        <div class="col-sm" id = "name">
-          Sally joe
-        </div>
-        <div class="col-sm">
-        456 North Rd.
-        </div>
-        <div class="col-sm">
-          Sallyjoe456northRd
-        </div>
-         </li>
-
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-sm" id = "name">
-            John Doe
-          </div>
-          <div class="col-sm">
-          891 North Rd.
-          </div>
-          <div class="col-sm">
-            JohnDoe891northRd
-          </div>
-         </li>
-
-    </ul> 
-
-  </div> -->
-
-  <!-- This list contains all votes cast -->
-    <div id="main" class="card card-body col-sm-6">
-     <h2 class="title"> All Votes</h2>
-       <div class="container">
-             <div class="row">
-               <div class="col-sm">
-                 Position
-               </div>
-               <div class="col-sm">
-               Vote cast
-               </div>
-               <div class="col-sm">
-                 Voter ID
-               </div>
-             </div>
-          </div>
- 
-     
-     <ul id="Votes" class="list-group">
- 
-       <li class="list-group-item">
-         <div class="row">
-         <div class="col-sm" >
-           Senate
-         </div>
-         <div class="col-sm">
-         Person 
-         </div>
-         <div class="col-sm">
-           Billybob123northRd
-         </div>
-         
-       </div></li>
- 
-       <li class="list-group-item">
-         <div class="row">
-         <div class="col-sm" >
-           Senate
-         </div>
-         <div class="col-sm">
-         Person2
-         </div>
-         <div class="col-sm">
-           Sallyjoe456northRd
-         </div>
-         </li>
- 
-       <li class="list-group-item">
-         <div class="row">
-           <div class="col-sm" id = "name">
-             President
-           </div>
-           <div class="col-sm">
-           Someone
-           </div>
-           <div class="col-sm">
-             JohnDoe891northRd
-           </div>
-            </li>
- 
-     </ul>
-    </div>
-</div>
 </body>
 
 </html>

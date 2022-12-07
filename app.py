@@ -4,10 +4,9 @@ from flask import request, Flask, render_template
 import requests
 
 from db import get_sqlite3_conx
-from voter_db import initializeVoters, initializeCandidates, initializeVotes, addVoter, getVoters, addCandidate, getCandidates, addVote, getVotes
+from voter_db import initializeVoters, initializeCandidates, addVoter, getVoters, addCandidate, getCandidates
 from voter import Voter
 from candidate import Candidate
-from vote import Vote
 
 
 VOTER_DB = 'voters.db'
@@ -17,7 +16,6 @@ CANDIDATES_DB = 'candidates.db'
 conx = get_sqlite3_conx(VOTER_DB)
 initializeVoters(conx)
 initializeCandidates(conx)
-initializeVotes(conx)
 conx.close()
 
 
@@ -69,6 +67,10 @@ def api_login():
 def login():
     return render_template('adminLogin.html')
 
+@app.route('/voter', methods=['GET'], endpoint='voter')
+def vote():
+    return render_template('voter.html')
+
 
 @app.route('/admin', methods=['GET'], endpoint='admin')
 def admin():
@@ -79,12 +81,12 @@ def voters():
     conx = get_sqlite3_conx(VOTER_DB)
     if request.method == 'GET':
         body = json.dumps(getVoters(conx))
-
         return (body, 200)
 
     elif request.method == 'POST':
+        print(request.json)
         if not request.json:
-            return ({'error': 'No body found'}, 400)
+            return ({'error': 'No body found'}, 402)
         
         voter_record = request.json
         new_voter = Voter(as_json=voter_record)
@@ -93,17 +95,17 @@ def voters():
         voter_record["id"] = new_voter.id
         return (voter_record, 201)
 
+
 @app.route('/v1/admin/candidates', methods=['GET', 'POST'], endpoint='candidates')
 def candidates():
     conx = get_sqlite3_conx(VOTER_DB)
     if request.method == 'GET':
         body = json.dumps(getCandidates(conx))
-
         return (body, 200)
 
     elif request.method == 'POST':
         if not request.json:
-            return ({'error': 'No body found'}, 400)
+            return ({'error': 'No body found'}, 401)
         
         voter_record = request.json
         new_candidate = Candidate(as_json=voter_record)
