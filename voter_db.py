@@ -80,11 +80,17 @@ def getCandidates(conx):
                 }
             )
 
-    response_body = {
-        'candidates': formatted_results
+    by_position = {
+            'president': [],
+            'vice_president': [],
+            'senator': [],
+            'representative': []
     }
+
+    for c in formatted_results:
+        by_position[c['position']].append(' '.join([c['first_name'], c['last_name']]))
     
-    return response_body
+    return by_position
 
 def addVote(conx, vote):
     cursor = conx.cursor()

@@ -69,7 +69,10 @@ def login():
 
 @app.route('/voter', methods=['GET'], endpoint='voter')
 def vote():
-    return render_template('voter.html')
+    conx = get_sqlite3_conx(VOTER_DB)
+    candidates = getCandidates(conx)
+    print("YOOOO", candidates)
+    return render_template('voter.html', candidates=candidates)
 
 
 @app.route('/admin', methods=['GET'], endpoint='admin')
@@ -100,8 +103,8 @@ def voters():
 def candidates():
     conx = get_sqlite3_conx(VOTER_DB)
     if request.method == 'GET':
-        body = json.dumps(getCandidates(conx))
-        return (body, 200)
+        all_candidates = getCandidates(conx)
+        return (all_candidates, 200)
 
     elif request.method == 'POST':
         if not request.json:
