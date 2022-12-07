@@ -90,6 +90,7 @@ def voters():
         new_voter = Voter(as_json=voter_record)
         addVoter(conx, new_voter)
         print(f"voter record: {voter_record}")
+        voter_record["id"] = new_voter.id
         return (voter_record, 201)
 
 @app.route('/v1/admin/candidates', methods=['GET', 'POST'], endpoint='candidates')
@@ -153,7 +154,7 @@ def vote_totals():
 
         if not vice_president_votes.get(vice_president, None):
             vice_president_votes[vice_president] = 0
-        vice_president_votes[president] += 1
+        vice_president_votes[vice_president] += 1
 
         if not senator_votes.get(senator, None):
             senator_votes[senator] = 0
@@ -161,7 +162,12 @@ def vote_totals():
 
         if not representative_votes.get(representative, None):
             representative_votes[representative] = 0
-        representative_votes += 1
+        representative_votes[representative] += 1
+
+    president_votes_sorted = sorted(president_votes.items(), key=lambda x: x[1])[0]
+    vice_president_votes_sorted = sorted(vice_president_votes.items(), key=lambda x: x[1])[0]
+    senator_votes_sorted = sorted(senator_votes.items(), key=lambda x: x[1])[0]
+    representative_votes_sorted = sorted(representative_votes.items(), key=lambda x: x[1])[0]
 
     body = {
         'vote_totals': {
@@ -171,8 +177,23 @@ def vote_totals():
             'representative': representative_votes,
         },
         'winners': {
-
+            'president': {
+                'name': president_votes_sorted[0],
+                'votes': president_votes_sorted[1]
+            },
+            'vice_president': {
+                'name': vice_president_votes_sorted[0],
+                'votes': vice_president_votes_sorted[1]
+            },
+            'senator': {
+                'name': senator_votes_sorted[0],
+                'votes': senator_votes_sorted[1]
+            },
+            'representative': {
+                'name': representative_votes_sorted[0],
+                'votes': representative_votes_sorted[1]
+            }
         }
     }
 
-    return (votes, 200)
+    return (body, 200)
