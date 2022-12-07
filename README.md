@@ -1,8 +1,7 @@
-## Final_Project_Software_Engineering
+## Project Name: Simulating a Voting System in the United States
 
-# Project Name: Simulating a Voting System in the United States
 
-# Introduction
+## Introduction
 This Project aims to simulate the voting system in the United States, particularly at the federal level - for President, VP, Senator, and House Representative. The User Interface contains the 'Admin Tool' and the 'Voter Tool'.
 
 - The Admin Tool entails all processes of Voter and Candidate Registration.
@@ -14,15 +13,17 @@ This Project aims to simulate the voting system in the United States, particular
 - After all votes are collated, the winner of each category is declared to the public.
 - For a full view of the project, visit the [project page] (https://github.com/SkylerBohn13/Final_Project_Software_Engineering).
 
-# Requirements
+
+## Requirements
 Asides the IDE's for the relevant languages, no additional modules or libraries are required to have the working code.
 
-# Installation
+
+## Installation
 This code requires the following installation:
 - Pip install pipenv
 - Pipenv install
-
 Then set the flask_app = app.py
 
-# Configuration
+
+## Configuration
 Since there are no additional modules to be installed, there is little to no configuration needed.
